@@ -1,7 +1,3 @@
-You're right! Merging both `README` details provides a comprehensive overview that includes the initial functionality and the newly added ones. Here’s the unified `README.md`:
-
----
-
 # Neuroanatomical Model Processing and Visualization
 
 This module processes neuroanatomical sulcal data using bootstrap sampling and piecewise linear models, and generates visualizations. It can analyze features like sulcal opening or cortical thickness across different datasets, atlases, and percentiles.
