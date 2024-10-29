@@ -3,6 +3,7 @@
 This module processes neuroanatomical sulcal data using bootstrap sampling and piecewise linear models, and generates visualizations. It can analyze features like sulcal opening or cortical thickness across different datasets, atlases, and percentiles.
 
 ## Table of Contents
+- [Project Structure](#project-structure)
 - [Installation](#installation)
 - [Pipeline Overview](#pipeline-overview)
 - [Usage](#usage)
@@ -16,6 +17,18 @@ This module processes neuroanatomical sulcal data using bootstrap sampling and p
   - [save_coeff](#save_coeff)
   - [process](#process)
 - [Examples](#examples)
+
+## Project Structure
+
+- **data/**: Contains four datasets:
+  - *Brainvisa sulcal opening on the at-risk Memento population*
+  - *Brainvisa sulcal opening on the general population UK Biobank*
+  - *Brainvisa cortical thickness on UK Biobank*
+  - *Freesurfer cortical thickness (on Desikan atlas) on UK Biobank*
+  
+  Subject IDs across the UK Biobank datasets remain consistent.
+
+- **modelling.py**: Contains all the necessary functions to process and visualize the data.
 
 ## Installation
 
@@ -50,7 +63,7 @@ Loads the neuroanatomical dataset by feature, atlas, and dataset type.
 - `atlas` (str): The brain parcellation atlas, e.g., `'brainvisa'` or `'desikan'`.
 - `dataset` (str): Dataset name, e.g., `'UKB'` or `'Memento'`.
 
-### `bootstrap(data, feature, sulci_names, foldername, proportion, n_bootstraps, percentile)`
+### `bootstrap(data, feature, sulci_names, foldername, frac_samples, n_bootstraps, percentile)`
 Generates bootstrap samples for data and saves models.
 
 **Parameters**
@@ -58,18 +71,20 @@ Generates bootstrap samples for data and saves models.
 - `feature` (str): Feature of interest, e.g., `'opening'` or `'thickness'`.
 - `sulci_names` (list of str): Names of ROIs.
 - `foldername` (str): Folder path for saving files.
-- `proportion` (float): Proportion of data in each bootstrap sample.
+- `frac_samples` (float): Proportion of data in each bootstrap sample.
 - `n_bootstraps` (int): Number of bootstrap samples.
 - `percentile` (int): Quantile line between 0 and 100.
 
-### `piecewise_linear_percentile(data, percentile)`
+### `piecewise_linear_percentile(data, feature, sulci_names, percentile)`
 Fits a piecewise linear model for a specified percentile.
 
 **Parameters**
 - `data` (DataFrame): Input data.
+- `feature` (str): Feature of interest, e.g., `'opening'` or `'thickness'`.
+- `sulci_names` (list of str): Names of ROIs.
 - `percentile` (int): Quantile line between 0 and 100.
 
-### `display_linear_bootstrap(data, tabs, data_bootstrap, foldername, feature, atlas, percentile, gender, show)`
+### `display_linear_bootstrap(data, tabs, data_bootstrap, foldername, feature, atlas, percentile, gender, display)`
 Plots the piecewise linear model fit on bootstrap samples.
 
 **Parameters**
@@ -81,7 +96,7 @@ Plots the piecewise linear model fit on bootstrap samples.
 - `atlas` (str): Atlas name.
 - `percentile` (int): Quantile line.
 - `gender` (str): Gender designation, e.g., `'F'` or `'M'`.
-- `show` (bool): Display the plot if `True`.
+- `display` (bool): Display the plot if `True`.
 
 ### `slope_change(a1, a2)`
 Calculates the change in slope between model segments.
@@ -94,7 +109,7 @@ Calculates the change in slope between model segments.
 Retrieves model parameters and training data from saved files.
 
 **Parameters**
-- `sulci_names` (list of str): ROIs for which models were fitted.
+- `sulci_names` (list of str): Names of ROIs for which models were fitted.
 - `n_bootstraps` (int): Number of bootstrap samples.
 - `foldername` (str): Folder path with saved `.txt` and `.npy` files.
 
@@ -103,11 +118,11 @@ Saves model parameters in a CSV format compatible with Morphologist.
 
 **Parameters**
 - `col_names` (list of str): Model parameter names, e.g., `['a1', 'b1', ...]`.
-- `sulci_names_` (list of str): Sulci names.
+- `sulci_names_` (list of str): Names of ROIs.
 - `coeff` (array): Model parameters for each sulcus.
 - `filename` (str): Path for the CSV file.
 
-### `process(output_dir, feature, dataset, atlas, n_bootstraps, percentile, gender=None)`
+### `process(output_dir, feature, dataset, atlas, n_bootstraps, percentile, gender)`
 Runs the pipeline on a dataset, with specified bootstraps and percentiles.
 
 **Parameters**
